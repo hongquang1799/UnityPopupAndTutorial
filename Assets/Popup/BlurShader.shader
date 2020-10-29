@@ -45,6 +45,7 @@
                 float2 texelSize = float2(_TexelSize.x, 0);
                 
                 fixed4 col = fixed4(0, 0, 0, 0);
+				// hehe hihi hello
 	            //col += tex2D(_MainTex, i.uv + texelSize * 5) * 0.0093;
 	            //col += tex2D(_MainTex, i.uv + texelSize * 4) * 0.028002;
 	            col += tex2D(_MainTex, i.uv + texelSize * 3) * 0.0713;
