@@ -4,39 +4,64 @@ using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
 
-public class Popup : MonoBehaviour
+namespace Popup
 {
-    public Action ShowEvent;
-
-    public Action HideEvent;
-
-    protected Transform cachedTransform;
-
-    [NonSerialized] public bool preInstantiated;
-
-    [NonSerialized] public bool exitByBackBlocker;
-
-    void Awake()
+    public class Popup : MonoBehaviour
     {
-        cachedTransform = transform;
-    }
+        public Action PreAnimateShowEvent;
 
-    public virtual void Show()
-    {
-        cachedTransform.DOKill();
-        cachedTransform.localScale = new Vector3(0.5f, 0.5f, 1f);
-        cachedTransform.DOScale(1f, 0.35f);
-    }
+        public Action PostAnimateShowEvent;
 
-    public virtual void Hide()
-    {
-        cachedTransform.DOKill();
-        cachedTransform.localScale = new Vector3(1f, 1f, 1f);
-        cachedTransform.DOScale(0f, 0.35f).
-            OnComplete(() =>
+        public Action PreAnimateHideEvent;
+
+        public Action PostAnimateHideEvent;
+
+        protected Transform cachedTransform;
+
+        protected Action backBlockerEvent;
+
+        void Awake()
+        {
+            cachedTransform = transform;
+        }
+
+        protected internal virtual void Show()
+        {
+            PreAnimateShowEvent?.Invoke();
+
+            cachedTransform.DOKill();
+            cachedTransform.localScale = new Vector3(0.5f, 0.5f, 1f);
+            cachedTransform.DOScale(1f, 0.35f).OnComplete(() =>
             {
-                gameObject.SetActive(false);
-                Destroy(gameObject);
+                PostAnimateShowEvent?.Invoke();
             });
+        }
+
+        protected internal void Close(bool forceDestroying = true)
+        {
+            PreAnimateHideEvent?.Invoke();
+
+            cachedTransform.DOKill();
+            cachedTransform.localScale = new Vector3(1f, 1f, 1f);
+            cachedTransform.DOScale(0f, 0.35f).
+                OnComplete(() =>
+                {
+                    PostAnimateHideEvent?.Invoke();
+
+                    if (forceDestroying)
+                    {
+                        Destroy(gameObject);
+                    }
+                    else
+                    {
+                        gameObject.SetActive(false);
+                    }
+                });
+        }
+
+        public void CloseInternal()
+        {
+            PopupSystem.Instance.ClosePopup();
+        }
     }
 }

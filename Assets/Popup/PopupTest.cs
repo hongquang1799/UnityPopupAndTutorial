@@ -8,12 +8,14 @@ public class PopupTest : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.V))
         {
-            PopupSystem.Instance.ShowPopup(PopupType.PopupGameStart);
+            var popup = Popup.PopupSystem.Instance.ShowPopup(PopupType.PopupGameStart,
+                Popup.CurrentPopupBehaviour.KeepShowing, () => Debug.Log("Dit me may"));
         }
 
         if (Input.GetKeyDown(KeyCode.M))
         {
-            PopupSystem.Instance.ShowPopup(PopupType.PopupGameLose);
+            Popup.PopupSystem.Instance.ShowPopup(PopupType.PopupGameLose,
+                Popup.CurrentPopupBehaviour.HideTemporary, Popup.PopupSystem.Instance.ClosePopup);
         }
     }
 }
