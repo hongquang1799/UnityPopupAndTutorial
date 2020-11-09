@@ -56,7 +56,7 @@ public class WellDoneEffectController : MonoBehaviour
 
             SpriteRenderer spr = characters[i].GetChild(0).GetComponent<SpriteRenderer>();
             spr.material.SetFloat(id, 0f);
-            spr.material.DOFloat(1f, id, 0.8f).SetDelay(mul * 0.4f).SetEase(birghtCurve);
+            spr.material.DOFloat(1f, id, 0.8f).SetDelay(mul * 0.8f).SetEase(birghtCurve);
         }
 
         yield return null;
